@@ -38,7 +38,34 @@ const getFile = async (path) => {
   }
 }
 
-// Helper method to read from pangram list file in Firebase storage and pick a word
+// Helper method to read from full word list text and return a list of words
+// matching a regex pattern
+const validWords = async (pangram) => {
+  const text = await getFile(wordsPath);
+
+  // Initialize a set and add each character to the set
+  // result is all 7 the unique letters in the pangram
+  const uniqueLetters = new Set();
+  for (let step = 0; step < pangram.length; step++) {
+    uniqueLetters.add(pangram.charAt(step));
+  }
+
+  // Build a string 7 chars long from the unique letters in the set
+  const letterString = "";
+  uniqueLetters.forEach((letter) => {
+    letterString.concat(letter);
+  })
+
+  const randIndex = randomInteger(0, letterString.length - 1); // choose a random index in the letters string
+  const anchorLetter = letterString[randIndex]; // Grab a letter at random to be anchor
+
+  // Define a regex pattern and use it to find all matches from the input text
+  const pattern = new RegExp(`^[${letterString}]*${anchorLetter}[${letterString}]*$`) // avert your eyes
+  const words = text.matchAll(pattern);
+  return words;
+}
+
+// Helper method to read from pangram list text from Firebase storage and pick a word
 // at random, then return that word
 const choosePangram = async () => {
   const text = await getFile(pangramsPath); // should be a long string full of pangrams
