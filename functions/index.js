@@ -1,19 +1,51 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const cors = require('cors')({ origin: true });
+const admin = require('firebase-admin');
+const { onRequest } = require("firebase-functions/v2/https");
+const { getDownloadURL, getStorage } = require('firebase-admin/storage');
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+const app = admin.initializeApp();
+const storage = admin.storage(app);
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+// GET request event handler; returns a random pangram
+exports.getPangram = onRequest((request, response) => {
+  return cors(request, response, async () => {
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+    let pangram = await choosePangram();
+    console.log(pangram);
+
+    // return choosePangram();
+    response.send(pangram);
+  })
+});
+
+// Helper method to read from pangram list file in Firebase storage and pick a word
+// at random, then return that word
+const choosePangram = async () => {
+  const pangramList = getStorage().bucket().file("filtered_words.txt");
+  const pangramLine = randPangramLine(); // choose random line index for pangram word
+
+  try {
+    const downloadURL = await getDownloadURL(pangramList);
+    const response = await fetch(downloadURL);
+    const text = await response.text();
+    const lines = text.split('\n');
+    const pangram = lines[pangramLine];
+
+    return pangram;
+  } catch (error) {
+    console.error('Error reading file:', error);
+    return '';
+  }
+};
+
+// Returns a random number in range min-max, both inclusive
+function randomInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Uses randomInteger RNG to choose a random line number from the lines in pangram list (filtered_words.txt)
+function randPangramLine() {
+  // Count of lines in Pangram list, I don't anticipate this changing unless I switch word lists or update pangram definition
+  const linesCount = 54825; 
+  return randomInteger(0, linesCount);
+}
