@@ -36,7 +36,8 @@ exports.getPangram = onRequest((request, response) => {
 
     // Build a string 7 chars long from the unique letters in the set
     let letterString = "";
-    uniqueLetters.forEach((letter) => {
+    const shuffled = shuffleSet(uniqueLetters);
+    shuffled.forEach((letter) => {
       letterString += letter;
     })
     letterString = letterString.trim();
@@ -70,6 +71,19 @@ exports.getPangram = onRequest((request, response) => {
     response.end(JSON.stringify(data));    
   })
 });
+
+// Takes a set as argument and returns an array with the elements shuffled
+function shuffleSet(set) {
+  const array = Array.from(set);
+
+  // Shuffle the array (using Fisher-Yates algorithm)
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+
+  return new Set(array);
+}
 
 // Downloads the file at the specified path in Firebase storage
 // and returns all the text within it as a single string
