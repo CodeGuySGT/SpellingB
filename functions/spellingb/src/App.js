@@ -1,6 +1,32 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import './App.css';
+import { initializeApp } from "firebase/app";
+import { initializeAppCheck, ReCaptchaV3Provider, getToken } from "firebase/app-check";
+import { getFunctions, httpsCallable } from "firebase/functions";
+
+const firebaseConfig = {
+  reCAPTCHAKey: process.env.REACT_APP_RECAPTCHA_SITE_KEY,
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID
+};
+
+const app = initializeApp( firebaseConfig );
+
+// Create a ReCaptchaEnterpriseProvider instance using your reCAPTCHA Enterprise
+// site key and pass it to initializeAppCheck().
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider(firebaseConfig.reCAPTCHAKey),
+  isTokenAutoRefreshEnabled: true // Set to true to allow auto-refresh.
+});
+
+const functions = getFunctions();
+const getPangram = httpsCallable(functions, 'getPangram');
 
 class App extends Component {
   constructor(props) {
@@ -18,17 +44,31 @@ class App extends Component {
   }
 
   componentDidMount() {
-    return axios.get('https://getpangram-3kfmj5xhqq-uc.a.run.app').then((response) => {
-      this.setState({
-        validWords: response.data.validWords,
-        letters: response.data.letters,
-        anchor: response.data.anchorLetter
-      }, () => {
-        console.log(this.state.validWords);
-        console.log(this.state.letters);
-        console.log(this.state.anchor);
+    return getToken(appCheck, /* forceRefresh= */ false)
+      .then((tokenResponse) => {
+        const token = tokenResponse.token;
+
+        console.log("token: " +
+          token
+        );
+  
+        return getPangram({
+          headers: {
+            'X-Firebase-AppCheck': token,
+            'Content-Type': 'application/json'
+          }
+        });
       })
-    })
+      .then((response) => {
+        this.setState({
+          validWords: response.data.validWords,
+          letters: response.data.letters,
+          anchor: response.data.anchorLetter
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }
 
   addWord(event) {

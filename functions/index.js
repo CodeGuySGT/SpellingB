@@ -1,6 +1,5 @@
-const cors = require('cors')({ origin: true });
 const admin = require('firebase-admin');
-const { onRequest } = require("firebase-functions/v2/https");
+const { onCall } = require("firebase-functions/v2/https");
 const { getDownloadURL, getStorage } = require('firebase-admin/storage');
 
 admin.initializeApp();
@@ -9,17 +8,11 @@ const pangramsPath = "filtered_words.txt";
 const wordsPath = "word.list";
 
 // GET request event handler; returns a random pangram
-exports.getPangram = onRequest((request, response) => {
-  return cors(request, response, async () => {
+exports.getPangram = onCall(
 
-    // Error handling to only allow get requests to this endpoint
-    if (request.method !== 'GET') {
-      return response.status(404).json({
-          message: 'Not allowed'
-      });
-    };
+  // Reject requests with missing or invalid App Check tokens.
+  { enforceAppCheck: true }, async () => { 
 
-    // Choose and store a random pangram from pre-made list 
     let pangram;
     try {
       pangram = await choosePangram();
@@ -45,7 +38,7 @@ exports.getPangram = onRequest((request, response) => {
     // Grab a letter at random to be anchor
     let randIndex; 
     try {
-      randIndex = await randomInteger(0, letterString.length - 1);
+      randIndex = randomInteger(0, letterString.length - 1);
     } catch (e) {
       console.error(e);
     }
@@ -58,19 +51,15 @@ exports.getPangram = onRequest((request, response) => {
       console.error(e);
     }
 
-    // Create a JavaScript object with required info
-    const data = {
+    // return data to client
+    return {
       pangram: pangram,
       letters: letterString,
       anchorLetter: anchorLetter,
       validWords: wordsArray
     };
-
-    // Convert the object to a JSON string
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify(data));    
-  })
-});
+  }
+);
 
 // Takes a set as argument and returns an array with the elements shuffled
 function shuffleSet(set) {
