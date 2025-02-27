@@ -131,7 +131,6 @@ const choosePangram = async () => {
   try {
     const lines = text.split('\r\n'); // split single string text into an array of pangram strings
     const pangram = lines[pangramLine]; // Grab the pangram at the specified random array index
-    console.log(pangram)
 
     return pangram;
   } catch (error) {

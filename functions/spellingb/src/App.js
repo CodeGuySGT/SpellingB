@@ -47,10 +47,6 @@ class App extends Component {
     return getToken(appCheck, /* forceRefresh= */ false)
       .then((tokenResponse) => {
         const token = tokenResponse.token;
-
-        console.log("token: " +
-          token
-        );
   
         return getPangram({
           headers: {
@@ -76,9 +72,6 @@ class App extends Component {
     const { validWords, anchor } = this.state;
     let { score, alreadyFound } = this.state;
     const newWord = this.newWord.value.toLowerCase();
-    
-    console.log(newWord);
-
     
     if (!newWord.includes(anchor)) {
       this.setState({
