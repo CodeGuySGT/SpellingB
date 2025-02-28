@@ -8,6 +8,8 @@ This project is my own work, and I did not use a guide or walkthrough to trivial
 
 ## Gameplay
 
+![Gameplay Screenshot](/SpellingB%20screenshot.png)
+
 At the time of writing, the deployed code is for the 'MVP' version of the game, which includes only the basic gameplay. This functionality loads the fully-playable game to the browser on page load, using a random set of 7 distinct letters that is guaranteed to always spell at least one word that uses all 7 letters (called a 'pangram'). There is also simple messaging for different types of invalid inputs such as words missing the key letter, or using the wrong letters, not long enough, or not in dictionary. Finally, the game keeps a running score and list of already-guessed words for a single game until the page is refreshed.
 
 The string of random letters are all the letters the player can use to try to form words. Words must be at least four letters long, and must use the 'anchor letter', which is the letter found to the right of the two dashes, like this: -- 'x'
