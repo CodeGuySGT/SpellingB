@@ -65,5 +65,8 @@ node_modules/
 # dotenv environment variables file
 .env
 
+# secrets folder contents
+secrets/
+
 # dataconnect generated files
 .dataconnect
