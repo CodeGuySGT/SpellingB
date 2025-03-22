@@ -7,8 +7,6 @@ const test = require('firebase-functions-test')();
 
 describe('Cloud Functions', () => {
 
-  // Declare debug token
-  let debugToken;
 
   // Declare admin stub
   let adminInitStub;
@@ -24,15 +22,6 @@ describe('Cloud Functions', () => {
   let validWordsStub;
 
   before(() => {
-
-    // Read and store debug token at runtime
-    const tokenPath = './secrets/debug_token.txt';
-    try {
-        debugToken = fs.readFileSync(tokenPath, 'utf-8').trim();
-    } catch (error) {
-        console.error('Error reading debug token:', error);
-        throw error;
-    }
 
     // Stub admin.initializeApp to be a dummy function that doesn't do anything.
     adminInitStub = sinon.stub(admin, 'initializeApp');
