@@ -90,3 +90,56 @@ describe('Cloud Functions', () => {
     });
   });
 })
+
+describe('Helper Functions (helpers.js)', () => {
+
+  before(() => {
+
+    // Import helper functions and test file path from storage
+    myHelpers = require('../helpers.js');
+    const wordsPath = process.env.REACT_APP_WORDS_PATH_STORAGE;
+  });
+
+  after(() => {
+    
+    test.cleanup();
+  });
+
+  describe('shuffleSet', function () {
+
+    // Testing for true random with uniform distribution would involve hundreds of tests and statistical analysis that's beyond the scope of
+    // the function itself. It really just needs to scramble letters enough to feel random to users. Therefore, this test case tests that 
+    // the shuffle function returns a set containing the same elements in a different order. Random chance will cause the test to fail on average
+    // once in hundreds of septillions of runs. I can live with that.
+    it('Should return a set containing the alphabet in a different order when passed a similar set in alphabetical order', async function () {
+
+      let inputSet = new Set(['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']);
+
+      // Create new set by shuffling input set 
+      let resultSet = myHelpers.shuffleSet(inputSet);
+
+      // Assert the two sets contain the same elements
+      assert(inputSet.isSubsetOf(resultSet), 'Sets contain different elements');
+      assert(inputSet.isSupersetOf(resultSet), 'Sets contain different elements');
+
+      let areDifferent = false;
+      let isDone = false;
+      inputIter = inputSet.values();
+      resultIter = resultSet.values();
+
+      while (!isDone) {
+        let obj1 = inputIter.next();
+        let obj2 = resultIter.next();
+
+        if (obj1.value !== obj2.value) {
+          areDifferent = true;
+          isDone = true;
+        }
+
+        if (obj1.done === true || obj2.done === true) isDone = true;
+      }
+
+      assert(areDifferent, 'Set elements not shuffled')
+    })
+  })
+})
