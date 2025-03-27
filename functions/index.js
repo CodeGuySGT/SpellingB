@@ -49,7 +49,7 @@ exports.getPangram = onCall(
     }
 
     // return data to client
-    return {
+    return { 
       pangram: pangram,
       letters: letterString,
       anchorLetter: anchorLetter,

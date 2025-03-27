@@ -7,7 +7,6 @@ const test = require('firebase-functions-test')();
 
 describe('Cloud Functions', () => {
 
-
   // Declare admin stub
   let adminInitStub;
 
@@ -26,7 +25,7 @@ describe('Cloud Functions', () => {
     // Stub admin.initializeApp to be a dummy function that doesn't do anything.
     adminInitStub = sinon.stub(admin, 'initializeApp');
 
-    // Require index.js and helper functions and save the exports inside a namespace called myFunctions.
+    // Require index.js and helper functions and save the exports inside their own namepsaces.
     myFunctions = require('../index.js');
     myHelpers = require('../helpers.js');
 
@@ -54,16 +53,40 @@ describe('Cloud Functions', () => {
   });
 
   describe('getPangram', function () {
-    it('Returns valid pangram-related JSON', async function () {
+    it('Should return non-null JSON with non-null values', async function () {
         
       // Wrap function, call it, and save results to 'result' object
       const wrapped = test.wrap(myFunctions.getPangram);
       const result = await wrapped();
 
-      // Test for null response -- WIP
+      // Test for null response and values
       assert(result !== null, 'Null response object');
-      assert(result.pangram !== null, 'Null pangram')
+      assert(result.pangram !== null, 'Null pangram');
+      assert(result.anchorLetter !== null, 'Null anchor letter');
+      assert(result.validWords !== null, 'Null valid words list');
+    });
+
+    it("Should return { letters: 'subcrie' } given shuffleSet() returns ['s','u','b','c','r','i','e']", async function () {
+        
+      // Wrap function, call it, and save results to 'result' object
+      const wrapped = test.wrap(myFunctions.getPangram);
+      const result = await wrapped();
+
+      // Test for null response and values
+      assert(result.letters == 'subcrie', 'Letter string malformed');
+    });
+
+    it("Should return { anchorLetter: 'r' } given letters value is 'subcrie", async function () {
+        
+      // Wrap function, call it, and save results to 'result' object
+      const wrapped = test.wrap(myFunctions.getPangram);
+      const result = await wrapped();
+
+      // Test for null response and values
+      assert(result !== null, 'Null response object');
+      assert(result.pangram !== null, 'Null pangram');
+      assert(result.anchorLetter !== null, 'Null anchor letter');
+      assert(result.validWords !== null, 'Null valid words list');
     });
   });
-  
 })
