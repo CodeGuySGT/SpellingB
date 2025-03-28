@@ -33,8 +33,7 @@ exports.dlFile = async (path) => {
     }
 }
 
-// Reads from full word list text and return a list of words
-// matching a regex pattern
+// Reads from full word list text and return a list of words matching a regex pattern
 // letterString = 7-letter string containing one copy of each unique letter from pangram
 // anchorLetter = unique letter chosen at random from letterString. All 'valid' words contain
 // the anchorLetter
@@ -44,13 +43,13 @@ exports.validWords = async (letterString, anchorLetter) => {
     }
 
     // Save dictionary text as one large string
-    const text = await dlFile(wordsPath);
+    const text = await exports.dlFile(wordsPath);
 
     // Define a regex pattern and use it to find all matches from the input text
     const pattern = new RegExp(`^[${letterString}]*${anchorLetter}[${letterString}]*$`, 'gm'); 
     
     // array containing all valid words
-    const matches = text.match(pattern); 
+    const matches = text.match(pattern);
 
     // Array containing only words between length 4 and 20 from above array
     const correctLengthMatches = []; 
@@ -66,13 +65,13 @@ exports.validWords = async (letterString, anchorLetter) => {
 // Helper method to read from pangram list text from Firebase storage and pick a word
 // at random, then return that word
 exports.choosePangram = async () => {
-    const text = await dlFile(pangramsPath); // should be a long string full of pangrams
-    const pangramLine = randPangramLine(); // choose random line index for pangram word
+    const text = await exports.dlFile(pangramsPath); // should be a long string full of pangrams
+    const pangramLine = exports.randPangramLine(); // choose random line index for pangram word
 
     try {
-        const lines = text.split('\r\n'); // split single string text into an array of pangram strings
+        const lines = text.split(/\r?\n/); // split single string text into an array of pangram strings
         const pangram = lines[pangramLine]; // Grab the pangram at the specified random array index
-
+        
         return pangram;
     } catch (error) {
         throw new Error('Error parsing file:', error);
@@ -93,7 +92,7 @@ exports.randPangramLine = () => {
   const linesCount = 54825; 
   let index = null;
   try {
-    index = randomInteger(0, linesCount);
+    index = exports.randomInteger(0, linesCount);
   } catch (e) {
     console.error(e);
   }

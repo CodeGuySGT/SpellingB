@@ -1,4 +1,3 @@
-const fs = require('node:fs');
 const admin = require('firebase-admin');
 const { assert } = require('chai');
 const { before, after, describe, it } = require('mocha');
@@ -21,18 +20,17 @@ describe('Cloud Functions', () => {
   let validWordsStub;
 
   before(() => {
-
     // Stub admin.initializeApp to be a dummy function that doesn't do anything.
     adminInitStub = sinon.stub(admin, 'initializeApp');
 
     // Require index.js and helper functions and save the exports inside their own namepsaces.
-    myFunctions = require('../index.js');
-    myHelpers = require('../helpers.js');
+    myFunctions = require('../index.cjs');
+    myHelpers = require('../helpers.cjs');
 
     // Initialize stubs for each helper function
     choosePangramStub = sinon.stub(myHelpers, 'choosePangram');
-    shuffleSetStub = sinon.stub(myHelpers, 'shuffleSet'); // not necessary?
-    randomIntegerStub = sinon.stub(myHelpers, 'randomInteger'); // not necessary?
+    shuffleSetStub = sinon.stub(myHelpers, 'shuffleSet'); 
+    randomIntegerStub = sinon.stub(myHelpers, 'randomInteger'); 
     validWordsStub = sinon.stub(myHelpers, 'validWords');
 
     choosePangramStub.returns('subscribe');
@@ -91,17 +89,16 @@ describe('Cloud Functions', () => {
   });
 })
 
-describe('Helper Functions (helpers.js)', () => {
+describe('Helper Functions', () => {
 
-  before(() => {
+  let myHelpers;
 
+  beforeEach(() => {
     // Import helper functions and test file path from storage
-    myHelpers = require('../helpers.js');
-    const wordsPath = process.env.REACT_APP_WORDS_PATH_STORAGE;
+    myHelpers = require('../helpers.cjs');
   });
 
-  after(() => {
-    
+  afterEach(() => {
     test.cleanup();
   });
 
@@ -142,4 +139,81 @@ describe('Helper Functions (helpers.js)', () => {
       assert(areDifferent, 'Set elements not shuffled')
     })
   })
+
+  describe('validWords', function () {
+
+    let dlFileStub;
+
+    const mockText = 
+`beurre
+bibberies
+burrs
+crib
+suburbs
+succubi
+scrubbers
+bribe
+crier
+ruby
+scribe
+aaaaaa
+eeeeee`;
+
+    before(() => {
+      dlFileStub = sinon.stub(myHelpers, 'dlFile').resolves(mockText);
+    })
+
+    after(() => {
+      dlFileStub.restore();
+    })
+
+    it('Should return all valid words based on inputs, and no others', async function () {
+
+      const results = await myHelpers.validWords('subcrie', 'e');
+
+      let resultsMap = new Set(results);
+
+      assert(resultsMap.has('beurre'), 'Missing valid word: beurre');
+      assert(resultsMap.has('bribe'), 'Missing valid word: bribe');
+      assert(resultsMap.has('eeeeee'), 'Missing valid word: eeeeee');
+      assert(!resultsMap.has('aaaaaa'), 'Invalid word found: aaaaaa');
+      assert(!resultsMap.has('ruby'), 'Invalid word found: ruby');
+      assert.strictEqual(resultsMap.size, 7, 'Incorrect word count (7 expected): ' + resultsMap.size);
+    })
+  })
+
+  describe('choosePangram', function () {
+
+    let randPangramLineStub;
+    const mockText = 
+`beurre
+bibberies
+burrs
+crib
+suburbs
+succubi
+scrubbers
+bribe
+crier
+ruby
+scribe
+aaaaaa
+eeeeee`
+
+    before(() => {
+      randPangramLineStub = sinon.stub(myHelpers, 'randPangramLine').returns(4);
+      dlFileStub = sinon.stub(myHelpers, 'dlFile').resolves(mockText);
+    });
+
+    after(() => {
+      randPangramLineStub.restore();
+    });
+
+    it("Should return a word at random from word list ('suburbs' with stubbing)", async function () {
+
+      const result = await myHelpers.choosePangram();
+      
+      assert(result === 'suburbs', 'incorrect string returned: ' + result);
+    });
+  });
 })
