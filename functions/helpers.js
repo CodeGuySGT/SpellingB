@@ -88,7 +88,7 @@ exports.randomInteger = (min, max) => {
 
 // Uses randomInteger RNG to choose a random line number from the lines in pangram list (filtered_words.txt)
 exports.randPangramLine = () => {
-    // Count of lines in Pangram list, I don't anticipate this changing unless I switch word lists or update pangram definition
+// Count of lines in Pangram list, I don't anticipate this changing unless I switch word lists or update pangram definition
   const linesCount = 54825; 
   let index = null;
   try {

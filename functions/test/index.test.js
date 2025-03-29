@@ -24,8 +24,8 @@ describe('Cloud Functions', () => {
     adminInitStub = sinon.stub(admin, 'initializeApp');
 
     // Require index.js and helper functions and save the exports inside their own namepsaces.
-    myFunctions = require('../index.cjs');
-    myHelpers = require('../helpers.cjs');
+    myFunctions = require('../index.js');
+    myHelpers = require('../helpers.js');
 
     // Initialize stubs for each helper function
     choosePangramStub = sinon.stub(myHelpers, 'choosePangram');
@@ -95,7 +95,7 @@ describe('Helper Functions', () => {
 
   beforeEach(() => {
     // Import helper functions and test file path from storage
-    myHelpers = require('../helpers.cjs');
+    myHelpers = require('../helpers.js');
   });
 
   afterEach(() => {
@@ -216,4 +216,40 @@ eeeeee`
       assert(result === 'suburbs', 'incorrect string returned: ' + result);
     });
   });
+
+  describe('randomInteger', function () {
+
+    it("Should return three different numbers when called three times with range of 0 to 1000000000", async function () {
+      const min = 0;
+      const max = 1000000000;
+  
+      const res1 = myHelpers.randomInteger(min, max);
+      const res2 = myHelpers.randomInteger(min, max);
+      const res3 = myHelpers.randomInteger(min, max);
+
+      // Make sure at least one of the values is different
+      assert(res1 !== res2 || res1 !== 2 || res1 !== res3, 'Values not random: ' + res1 + ' ' + res2 + ' ' + res3);
+    })
+
+    it("Should return a value between 0 and 5 when called with that range", async function () {
+      const min = 0;
+      const max = 5;
+  
+      const result = myHelpers.randomInteger(min, max);
+
+      // Make sure at least one of the values is different
+      assert(result >= 0 && result <= 5, 'Result out of range 0-5');
+    })
+
+    describe('randPangramLine', function () {
+
+      it("Should return return a random number from 0 to 54825", async function () {
+
+        const result = myHelpers.randPangramLine();
+  
+        // Make sure at least one of the values is different
+        assert(result >= 0 && result <= 54825, 'Result out of range 0-54825');
+      })
+    })
+  })
 })

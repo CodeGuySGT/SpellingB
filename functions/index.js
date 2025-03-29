@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 const { onCall } = require("firebase-functions/v2/https");
-const helpers = require('./helpers.cjs');
+const helpers = require('./helpers.js');
 
 admin.initializeApp();
 
