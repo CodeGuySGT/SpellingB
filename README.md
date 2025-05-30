@@ -34,13 +34,14 @@ The string of random letters are all the letters the player can use to try to fo
 
 ## Roadmap
 
-- [X] Add unit tests and any other tests as needed to support further development
-- [X] Separate individual letters so each letter is in its own box or bubble in the UI, with the anchor letter more clearly demarcated
+- [x] Add unit tests and any other tests as needed to support further development
+- [x] Separate individual letters so each letter is in its own box or bubble in the UI, with the anchor letter more clearly demarcated
+- [ ] Improve initial load time for "cold start"
 - [ ] Tweak scoring logic to add more weight to longer words. Current logic is simply word length - 3
 - [ ] Add special scoring and messaging whenever user finds a 'pangram', a word using all 7 letters at least once
 - [ ] Build out database in Cloud Firestore to track users and add user login
 - [ ] Add high score page to track each user by their total accumulated score
-- [X] Potentially improve UI visually by implementing some simple design system
+- [x] Potentially improve UI visually by implementing some simple design system
 
 ## License
 
