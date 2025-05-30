@@ -4,15 +4,15 @@ The game is live now, and playable [here](https://spellingb-11a56.web.app/)!
 
 This is a personal project inspired by the word game "[Spelling Bee](https://www.nytimes.com/puzzles/spelling-bee)" from the New York Times. The goal is to replicate the basic functionality of that game, but on my own web app and in a way that allows users to play the game an unlimited number of times. The original game only allows users to play once a day. Otherwise, the main purpose of this project is for my own learning and fun!
 
-This project is my own work, and I did not use a guide or walkthrough to trivially follow steps. I did draw some insight and inspiration from [this walkthrough](https://medium.com/@charpellumeh/build-a-serverless-full-stack-app-using-firebase-cloud-functions-81afe34a64fc) by Ebuka Umeh; but that walkthrough is for a much simpler, and completely different, app, which doesn't include reCAPTCHA security, web hosting, or file storage.
+This project is my own work, and I did not use a guide or walkthrough to trivially follow steps. I did draw some insight and inspiration from [this walkthrough](https://medium.com/@charpellumeh/build-a-serverless-full-stack-app-using-firebase-cloud-functions-81afe34a64fc) by Ebuka Umeh; but that walkthrough is for a much simpler, and completely different, app (a shopping list), which doesn't include reCAPTCHA security, web hosting, or file storage.
 
 ## Gameplay
 
 ![Gameplay Screenshot](/SpellingBScreenshot.png)
 
-At the time of writing, the deployed code is for the 'MVP' version of the game, which includes only the basic gameplay. This functionality loads the fully-playable game to the browser on page load, using a random set of 7 distinct letters that is guaranteed to always spell at least one word that uses all 7 letters (called a 'pangram'). There is also simple messaging for different types of invalid inputs such as words missing the key letter, or using the wrong letters, not long enough, or not in dictionary. Finally, the game keeps a running score and list of already-guessed words for a single game until the page is refreshed.
+At the time of writing, the deployed code is for the 'MVP' version of the game, which includes only the basic gameplay. This functionality loads the fully-playable game to the browser on page load, using a random set of 7 distinct letters that is guaranteed to always spell at least one word that uses all 7 letters (called a 'pangram'). There is also simple messaging for different types of invalid inputs such as words missing the key letter, or using the wrong letters, not long enough, or not in dictionary (WIP). Finally, the game keeps a running score and list of already-guessed words for a single game until the page is refreshed.
 
-The string of random letters are all the letters the player can use to try to form words. Words must be at least four letters long, and must use the 'anchor letter', which is the letter found to the right of the two dashes, like this: -- 'x'
+Players can form words by pressing the buttons corresponding to the available letters, then pressing 'Add' once the word is fully-formed above. Words must be at least four letters long, and must use the 'anchor letter', which is the letter in the green button in the center. If the word is deemed valid, it will be added to the list of found words and the score will be updated.
 
 ## Tech stack
 
