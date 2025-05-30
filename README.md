@@ -8,7 +8,7 @@ This project is my own work, and I did not use a guide or walkthrough to trivial
 
 ## Gameplay
 
-![Gameplay Screenshot](/SpellingB%20screenshot.png)
+![Gameplay Screenshot](/SpellingBScreenshot.png)
 
 At the time of writing, the deployed code is for the 'MVP' version of the game, which includes only the basic gameplay. This functionality loads the fully-playable game to the browser on page load, using a random set of 7 distinct letters that is guaranteed to always spell at least one word that uses all 7 letters (called a 'pangram'). There is also simple messaging for different types of invalid inputs such as words missing the key letter, or using the wrong letters, not long enough, or not in dictionary. Finally, the game keeps a running score and list of already-guessed words for a single game until the page is refreshed.
 
@@ -19,8 +19,12 @@ The string of random letters are all the letters the player can use to try to fo
 - JavaScript
 - HTML
 - CSS
+- Bootstrap
 - React.js
 - Node.js
+- Mocha
+- Chai
+- Sinon
 - Firebase
     - Serverless functions
     - Web Hosting
@@ -30,13 +34,13 @@ The string of random letters are all the letters the player can use to try to fo
 
 ## Roadmap
 
-- [ ] Add unit tests and any other tests as needed to support further development
-- [ ] Separate individual letters so each letter is in its own box or bubble in the UI, with the anchor letter more clearly demarcated
+- [X] Add unit tests and any other tests as needed to support further development
+- [X] Separate individual letters so each letter is in its own box or bubble in the UI, with the anchor letter more clearly demarcated
 - [ ] Tweak scoring logic to add more weight to longer words. Current logic is simply word length - 3
 - [ ] Add special scoring and messaging whenever user finds a 'pangram', a word using all 7 letters at least once
 - [ ] Build out database in Cloud Firestore to track users and add user login
 - [ ] Add high score page to track each user by their total accumulated score
-- [ ] Potentially improve UI visually by implementing some simple design system
+- [X] Potentially improve UI visually by implementing some simple design system
 
 ## License
 
